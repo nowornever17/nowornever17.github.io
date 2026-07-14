@@ -1,44 +1,33 @@
-# nowornever17's Blog
+# 桉桉 · 个人博客
 
-基于 Astro + GitHub Pages 的个人博客 & 作品集。
-Editorial Brutalism 风格，黑白灰 + 橄榄绿配色。
+> 跨考公管 · INTJ · AI 学习系统 · 开源工具
 
-## 本地启动
+基于 Astro + GitHub Pages，Editorial Brutalism 风格。
+
+🔗 **[nowornever17.github.io](https://nowornever17.github.io)**
+
+---
+
+## 关于我
+
+城乡规划 → 公共管理，跨考中。用 Obsidian 和 AI 搭建学习系统，写小说，写代码，做开源。
+
+- 📦 [CaseForge](https://github.com/nowornever17/CaseForge) — 学术论文深度拆解框架
+- 📰 [govdaily-skill](https://github.com/nowornever17/govdaily-skill) — 考研公管日报自动生成
+
+---
+
+## 本地运行
 
 ```bash
 npm install
 npm run dev
-# 访问 http://localhost:4321
 ```
 
-## 写新文章
+## 部署
 
-在 `src/content/blog/` 新建 `.md` 文件：
+Push 到 main 分支 → GitHub Actions 自动部署到 GitHub Pages。
 
-```markdown
----
-title: 文章标题
-date: 2025-07-01
-tag: 技术折腾        # 学习成长 / 技术折腾 / 专业思考 / 项目日志
-excerpt: 一句话摘要
 ---
 
-正文内容...
-```
-
-## 部署到 GitHub Pages
-
-1. 把这个仓库推送到 GitHub
-2. 修改 `astro.config.mjs` 里的 `site` 为你的 GitHub Pages 地址
-3. GitHub 仓库 → Settings → Pages → Source 选 **GitHub Actions**
-4. 之后每次 push main 分支自动部署 ✓
-
-## 个性化修改
-
-| 要改的内容 | 文件位置 |
-|-----------|---------|
-| 姓名 / 介绍 | `src/pages/index.astro` & `src/pages/about.astro` |
-| 项目列表 | `src/pages/projects.astro` & `src/pages/index.astro` |
-| 主色调（橄榄绿） | `src/styles/global.css` → `--olive` |
-| GitHub / 邮箱链接 | `src/pages/about.astro` |
-| 网站地址 | `astro.config.mjs` → `site` |
+© 2026 桉桉 · Built with Astro
