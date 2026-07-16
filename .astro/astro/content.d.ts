@@ -166,13 +166,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"threshold-notes-01.md": {
-	id: "threshold-notes-01.md";
+"threshold-notes-01.mdx": {
+	id: "threshold-notes-01.mdx";
   slug: "threshold-notes-01";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
 };
 
 	};
