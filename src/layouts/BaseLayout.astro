@@ -46,6 +46,9 @@ const navLinks = [
         </a>
       ))}
     </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="切换主题" title="切换暗色/亮色">
+      🌓
+    </button>
     <button class="nav-menu" aria-label="菜单" id="menu-toggle">
       <span></span><span></span><span></span>
     </button>
@@ -117,6 +120,19 @@ const navLinks = [
   color: var(--ink);
 }
 
+/* Theme toggle */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+  line-height: 1;
+}
+.theme-toggle:hover { background: var(--olive-bg); }
+
 /* Hamburger (mobile) */
 .nav-menu {
   display: none;
@@ -186,4 +202,19 @@ const navLinks = [
 const toggle = document.getElementById('menu-toggle');
 const menu   = document.getElementById('mobile-menu');
 toggle?.addEventListener('click', () => menu?.classList.toggle('open'));
+
+// Theme toggle
+const themeBtn = document.getElementById('theme-toggle');
+const html = document.documentElement;
+const saved = localStorage.getItem('theme');
+if (saved) html.setAttribute('data-theme', saved);
+themeBtn?.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+});
+// Set initial icon
+if (saved === 'dark') themeBtn.textContent = '☀️';
 </script>

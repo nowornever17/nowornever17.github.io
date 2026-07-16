@@ -16,8 +16,10 @@
   --font-body:    'Inter', sans-serif;
 }
 
+/* Dark mode — user toggle or system preference */
+[data-theme="dark"],
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg:       #111110;
     --ink:      #F0EDE6;
     --olive:    #8FA85E;
@@ -27,6 +29,30 @@
     --border:   rgba(240,237,230,0.1);
     --border-strong: rgba(240,237,230,0.2);
   }
+}
+
+/* Explicit dark override */
+[data-theme="dark"] {
+  --bg:       #111110;
+  --ink:      #F0EDE6;
+  --olive:    #8FA85E;
+  --olive-bg: #2A3018;
+  --olive-text: #A8C070;
+  --muted:    #666660;
+  --border:   rgba(240,237,230,0.1);
+  --border-strong: rgba(240,237,230,0.2);
+}
+
+/* Explicit light override */
+[data-theme="light"] {
+  --bg:       #F5F2EC;
+  --ink:      #0D0D0D;
+  --olive:    #6B7C4A;
+  --olive-bg: #E8EDD8;
+  --olive-text: #4A5E24;
+  --muted:    #888888;
+  --border:   rgba(13,13,13,0.12);
+  --border-strong: rgba(13,13,13,0.22);
 }
 
 /* ── Reset ── */
