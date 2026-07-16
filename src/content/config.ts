@@ -5,7 +5,7 @@ const blog = defineCollection({
   schema: z.object({
     title:   z.string(),
     date:    z.date(),
-    tag:     z.enum(['学习成长', '技术折腾', '专业思考', '项目日志']),
+    tag:     z.enum(['学习成长', '项目日志', '阈值笔记']),
     excerpt: z.string().optional(),
   }),
 });

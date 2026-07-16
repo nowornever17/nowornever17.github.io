@@ -5,13 +5,12 @@ import { getCollection } from 'astro:content';
 const allPosts = await getCollection('blog');
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const tags = ['全部', '学习成长', '技术折腾', '专业思考', '项目日志'];
+const tags = ['全部', '学习成长', '项目日志', '阈值笔记'];
 
 const tagClass: Record<string, string> = {
   '学习成长': 'tag-study',
-  '技术折腾': 'tag-tech',
   '项目日志': 'tag-proj',
-  '专业思考': 'tag-think',
+  '阈值笔记': 'tag-think',
 };
 ---
 
