@@ -1,58 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500&display=swap');
 
-/* ── Design Tokens ── */
+/* ─ Design Tokens ── */
 :root {
-  --bg:       #F5F2EC;
-  --ink:      #0D0D0D;
-  --olive:    #6B7C4A;
-  --olive-bg: #E8EDD8;
-  --olive-text: #4A5E24;
-  --muted:    #888888;
-  --border:   rgba(13,13,13,0.12);
-  --border-strong: rgba(13,13,13,0.22);
+  --paper:     #F3EFE7;
+  --ink:       #111111;
+  --dust:      #7A756D;
+  --accent:    #6B7A52;
+  --accent-bg: #D8DDD0;
+  --accent-text: #4A5E24;
+  --border:    rgba(17,17,17,0.08);
+  --border-strong: rgba(17,17,17,0.16);
 
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-ui:      'Space Grotesk', sans-serif;
-  --font-body:    'Inter', sans-serif;
-}
-
-/* Dark mode — user toggle or system preference */
-[data-theme="dark"],
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:       #111110;
-    --ink:      #F0EDE6;
-    --olive:    #8FA85E;
-    --olive-bg: #2A3018;
-    --olive-text: #A8C070;
-    --muted:    #666660;
-    --border:   rgba(240,237,230,0.1);
-    --border-strong: rgba(240,237,230,0.2);
-  }
-}
-
-/* Explicit dark override */
-[data-theme="dark"] {
-  --bg:       #111110;
-  --ink:      #F0EDE6;
-  --olive:    #8FA85E;
-  --olive-bg: #2A3018;
-  --olive-text: #A8C070;
-  --muted:    #666660;
-  --border:   rgba(240,237,230,0.1);
-  --border-strong: rgba(240,237,230,0.2);
-}
-
-/* Explicit light override */
-[data-theme="light"] {
-  --bg:       #F5F2EC;
-  --ink:      #0D0D0D;
-  --olive:    #6B7C4A;
-  --olive-bg: #E8EDD8;
-  --olive-text: #4A5E24;
-  --muted:    #888888;
-  --border:   rgba(13,13,13,0.12);
-  --border-strong: rgba(13,13,13,0.22);
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body:    'Noto Serif SC', 'SimSun', serif;
+  --font-ui:      'Inter', 'Space Grotesk', sans-serif;
 }
 
 /* ── Reset ── */
@@ -62,10 +23,35 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: var(--bg);
   color: var(--ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  /* Editorial paper background — warm ivory with fiber + grain texture */
+  background-color: #F3EFE7;
+  background-image:
+    /* Layer 1: Paper fiber texture (large scale) */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fiber'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23fiber)' opacity='0.03'/%3E%3C/svg%3E"),
+    /* Layer 2: Fine grain particles (small scale) */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E"),
+    /* Layer 3: Subtle ink speckles */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='speckle'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='2' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23speckle)' opacity='0.015'/%3E%3C/svg%3E");
+  background-size: auto, 512px 512px, 256px 256px, 128px 128px;
+  background-repeat: no-repeat, repeat, repeat, repeat;
+}
+
+/* ── Page container — subtle paper edge shadow ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.02),
+    inset 0 0 20px rgba(0, 0, 0, 0.01);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -75,6 +61,7 @@ img { max-width: 100%; display: block; }
 /* ── Typography helpers ── */
 .font-display { font-family: var(--font-display); }
 .font-ui      { font-family: var(--font-ui); }
+.font-body    { font-family: var(--font-body); }
 
 /* ── Tag variants ── */
 .tag {
@@ -88,12 +75,11 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
   display: inline-block;
 }
-.tag-study { background: var(--olive-bg); color: var(--olive-text); }
-.tag-tech  { background: var(--olive-bg); color: var(--olive-text); }
-.tag-proj  { background: var(--ink); color: var(--bg); }
-.tag-think { background: transparent; color: var(--muted); border: 0.5px solid var(--border-strong); }
+.tag-threshold { background: var(--accent-bg); color: var(--accent-text); }
+.tag-lab       { background: var(--ink); color: var(--paper); }
+.tag-archive   { background: transparent; color: var(--dust); border: 0.5px solid var(--border-strong); }
 
-/* ── Stack pill ── */
+/* ── Pill ── */
 .pill {
   font-family: var(--font-ui);
   font-size: 10px;
@@ -102,6 +88,423 @@ img { max-width: 100%; display: block; }
   padding: 2px 7px;
   border: 0.5px solid var(--border-strong);
   border-radius: 2px;
-  color: var(--muted);
+  color: var(--dust);
   display: inline-block;
+}
+
+/* ── Motion System: Editorial Breathing ── */
+
+/* Keyframe library */
+@keyframes ms-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ms-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Page entrance — sequential reveal on load */
+.entrance {
+  opacity: 0;
+  animation: ms-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.entrance-0 { animation-delay: 0s; }
+.entrance-1 { animation-delay: 0.15s; }
+.entrance-2 { animation-delay: 0.35s; }
+.entrance-3 { animation-delay: 0.55s; }
+.entrance-4 { animation-delay: 0.75s; }
+
+/* Scroll reveal — editorial sections */
+.reveal,
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible,
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children reveal (article lists, grids) */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; }
+.reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Navigation hover — underline sweep */
+.subnav-link {
+  position: relative;
+  padding-bottom: 2px;
+}
+.subnav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.subnav-link:hover::after,
+.subnav-link.active::after {
+  width: 100%;
+}
+
+/* Article card title — magazine underline on hover */
+.card-title {
+  position: relative;
+  display: inline-block;
+}
+.card-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .card-title::after { width: 100%; }
+
+/* Article card image — subtle scale */
+.card-image { overflow: hidden; }
+.cover-img img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .cover-img img {
+  transform: scale(1.03);
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--ink);
+  z-index: 10000;
+  transition: width 0.05s linear;
+}
+
+/* Parallax helper — applied via JS */
+.parallax {
+  will-change: transform;
+}
+
+/* View Transitions — magazine page turn */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Reduced motion — disable non-essential animation */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .entrance, .reveal, .fade-in, .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .parallax { transform: none !important; }
+}
+
+@media (max-width: 640px) {
+  .prose .drop-cap::first-letter {
+    font-size: 3.2em;
+  }
+  .prose .demo-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── Article Prose — Section headings (editorial label + title) ── */
+.prose h2 {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--dust);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.prose h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 2rem;
+}
+
+.prose h3 {
+  font-family: 'SimSun', 'Noto Serif SC', serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--dust);
+  margin-top: 2.5rem;
+  margin-bottom: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Article chapter reveal — number then title ── */
+.prose h2.chapter-reveal,
+.prose h3.chapter-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.prose h3.chapter-reveal { transition-delay: 0.18s; }
+.prose h2.chapter-reveal.visible,
+.prose h3.chapter-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Article Prose — Drop cap ── */
+.prose .drop-cap::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.2em;
+  font-weight: 700;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.08em;
+  margin-top: 0.05em;
+  color: var(--ink);
+}
+
+/* ── Article Prose — Paragraphs ── */
+.prose p {
+  margin-top: 0;
+  margin-bottom: 1.4rem;
+}
+
+/* ── Article Prose — Blockquote (pull quote) ─ */
+.prose blockquote {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--ink);
+  text-align: center;
+  padding: 2rem 1.5rem;
+  margin: 2.5rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Article Prose — Inline code ── */
+.prose code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  padding: 2px 5px;
+  border-radius: 2px;
+}
+
+/* ── Article Prose — Code blocks ─ */
+.prose pre {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.2rem 1.4rem;
+  border-radius: 2px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.prose pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+/* ── Article Prose — Links ── */
+.prose a {
+  color: var(--accent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.prose a:hover { border-color: var(--accent); }
+
+/* ── Article Prose — Horizontal rule ── */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* ── Article Prose — Tables ── */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.prose thead th {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dust);
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+.prose tbody td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Article Prose — Demo Grid ── */
+.prose .demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.prose .demo-item {
+  display: flex;
+  flex-direction: column;
+}
+.prose .demo-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dust);
+  margin-bottom: 0.4rem;
+}
+.prose .demo-desc {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dust);
+  margin-bottom: 0.8rem;
+}
+.prose .demo-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  float: none;
+  margin: 0;
+  filter: none;
+}
+
+/* ── Article Prose — Reading Archive sidebar ── */
+.prose .reading-archive {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background: rgba(17,17,17,0.03);
+  border: 1px solid var(--border);
+}
+.prose .reading-archive-title {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dust);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.prose .reading-archive ol {
+  padding-left: 1.2rem;
+  margin-bottom: 0;
+}
+.prose .reading-archive li {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+
+/* ─ Article Prose — Lists (continuous vertical bar, Substack/Medium) ── */
+/* Must be global because MDX <Content /> children lack data-astro-cid */
+.prose ul, .prose ol {
+  padding: 1rem 1.5rem !important;
+  margin-bottom: 1.4rem;
+  list-style-type: none !important;
+  list-style: none !important;
+  border-left: 3px solid #4A6FA5;
+  background: rgba(17,17,17,0.03);
+}
+.prose li {
+  margin-bottom: 0.8rem;
+  line-height: 1.8;
+  padding-left: 0;
+}
+.prose li:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Article Prose — Images (magazine float layout) ── */
+.prose img {
+  border-radius: 2px;
+  margin: 0.5rem 1.5rem 0.5rem 0;
+  float: left;
+  width: 42%;
+  height: auto;
+  display: block;
+  filter: grayscale(100%) contrast(1.05);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  shape-outside: margin-box;
+}
+.prose img + p {
+  margin-top: 0;
+}
+.prose img + p::after,
+.prose p:has(+ img)::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.prose .img-clear {
+  clear: both;
 }

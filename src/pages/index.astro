@@ -3,238 +3,378 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog');
-const latestPosts = allPosts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const thresholdPosts = allPosts
+  .filter(p => p.data.module === 'threshold' || p.data.tag === '阈值笔记')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestEssay = thresholdPosts[0];
 
-const tagClass: Record<string, string> = {
-  '学习成长': 'tag-study',
-  '项目日志': 'tag-proj',
-  '阈值笔记': 'tag-think',
-};
+const labPosts = allPosts
+  .filter(p => p.data.module === 'lab' || p.data.tag === '项目日志')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestLab = labPosts[0];
 
-const projects = [
-  {
-    name: 'CaseForge',
-    desc: '学术论文深度拆解框架。8 字段提取 + 4 格式输出，多学科 Prompt 插件化。',
-    stack: ['Python', 'DeepSeek', 'LLM'],
-    href: 'https://github.com/modusensus/CaseForge',
-  },
-  {
-    name: 'MindOS',
-    desc: 'AI 驱动的个人成长系统。8 个模块：捕捉→理解→成长→回顾→日程→行动→教练→配置。',
-    stack: ['HTML/CSS/JS', 'Multi-AI', 'Claude Artifacts'],
-    href: 'https://github.com/modusensus/Mindos',
-  },
-];
+const archivePosts = allPosts
+  .filter(p => !p.data.module || p.data.module === 'archive' || p.data.tag === '学习成长')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestArchive = archivePosts[0];
+
+const NEW_DAYS = 14;
+const isNew = (post) => post && (Date.now() - post.data.date.valueOf()) < NEW_DAYS * 86400000;
 ---
 
 <BaseLayout activeNav="home">
 
-  <!-- ── Hero ── -->
-  <section class="hero">
-    <div class="hero-text">
-      <p class="eyebrow">Urban Planning × Digital Governance × AI Tools</p>
-      <h1 class="hero-title">
-        知度<br /><span class="olive">MODUSENSUS.</span>
-      </h1>
-      <p class="hero-desc">
-        城乡规划本科在读，备考 UESTC 公共管理学硕。<br />
-        关注空间公平、数字治理与 AI 工具实践。
-      </p>
-    </div>
-    <div class="hero-meta">2026 · CHENGDU · CHINA</div>
+  <!-- ── Hero Banner ── -->
+  <section class="hero-banner">
+    <p class="hero-eyebrow entrance entrance-2">A Digital Studio</p>
+    <h1 class="hero-headline entrance entrance-2">
+      WAYS OF<br />THINKING
+    </h1>
+    <div class="hero-rule entrance entrance-3"><div class="rule-line"></div></div>
+    <p class="hero-subline entrance entrance-3">
+      Exploring ideas,<br />
+      technology,<br />
+      and human creativity.
+    </p>
+    <p class="hero-tip entrance entrance-4">SCROLL TO EXPLORE &darr;</p>
   </section>
 
-  <!-- ── Latest Posts ── -->
-  <section>
-    <div class="section-header">
-      <span class="section-label">LATEST POSTS</span>
-      <a href="/blog" class="section-link">All posts →</a>
-    </div>
+  <!-- ── Editorial Grid: 3 columns ── -->
+  <section class="editorial-grid reveal-stagger">
 
-    <div class="posts-list">
-      {latestPosts.map((post, i) => (
-        <a href={post.data.redirect || `/blog/${post.slug}`} class="post-row">
-          <span class="post-num">0{i + 1}</span>
-          <div class="post-body">
-            <p class="post-title">{post.data.title}</p>
-            <p class="post-sub">{post.data.excerpt}</p>
+    <!-- Column 1: Threshold Notes -->
+    <article class="grid-card">
+      {latestEssay && (
+        <a href={`/blog/${latestEssay.slug}`} class="card-link">
+          {latestEssay.data.cover ? (
+            <div class="card-image cover-img">
+              <img src={latestEssay.data.cover} alt={latestEssay.data.title} />
+            </div>
+          ) : (
+            <div class="card-image placeholder-img threshold-img"></div>
+          )}
+          <div class="card-body">
+            <div class="card-tag">
+              <span class="card-label">THRESHOLD NOTES</span>
+              {isNew(latestEssay) && <span class="new-badge">NEW</span>}
+            </div>
+            <h3 class="card-title">{latestEssay.data.title}</h3>
+            <p class="card-desc">
+              {latestEssay.data.subtitle || latestEssay.data.excerpt || '数字思想杂志 — Essay / Humanity / Technology'}
+            </p>
           </div>
-          <span class={`tag ${tagClass[post.data.tag] ?? 'tag-think'}`}>
-            {post.data.tag}
-          </span>
         </a>
-      ))}
-    </div>
+      )}
+    </article>
+
+    <!-- Column 2: Lab -->
+    <article class="grid-card">
+      {latestLab && (
+        <a href={`/blog/${latestLab.slug}`} class="card-link">
+          {latestLab.data.cover ? (
+            <div class="card-image cover-img">
+              <img src={latestLab.data.cover} alt={latestLab.data.title} />
+            </div>
+          ) : (
+            <div class="card-image placeholder-img lab-img"></div>
+          )}
+          <div class="card-body">
+            <div class="card-tag">
+              <span class="card-label">MODUSENSUS LAB</span>
+              {isNew(latestLab) && <span class="new-badge">NEW</span>}
+            </div>
+            <h3 class="card-title">{latestLab.data.title}</h3>
+            <p class="card-desc">
+              {latestLab.data.excerpt || 'AI experiments / tools / automation / systems'}
+            </p>
+          </div>
+        </a>
+      )}
+    </article>
+
+    <!-- Column 3: Archive -->
+    <article class="grid-card">
+      {latestArchive && (
+        <a href={`/blog/${latestArchive.slug}`} class="card-link">
+          {latestArchive.data.cover ? (
+            <div class="card-image cover-img">
+              <img src={latestArchive.data.cover} alt={latestArchive.data.title} />
+            </div>
+          ) : (
+            <div class="card-image placeholder-img archive-img"></div>
+          )}
+          <div class="card-body">
+            <div class="card-tag">
+              <span class="card-label">ARCHIVE</span>
+              {isNew(latestArchive) && <span class="new-badge">NEW</span>}
+            </div>
+            <h3 class="card-title">{latestArchive.data.title}</h3>
+            <p class="card-desc">
+              {latestArchive.data.excerpt || 'Reading / Research / Notes'}
+            </p>
+          </div>
+        </a>
+      )}
+    </article>
+
   </section>
 
-  <!-- ── Featured Projects ── -->
-  <section>
-    <div class="section-header">
-      <span class="section-label">PROJECTS</span>
-      <a href="/projects" class="section-link">All projects →</a>
-    </div>
-
-    <div class="proj-grid">
-      {projects.map(p => (
-        <a href={p.href} target="_blank" rel="noopener" class="proj-card">
-          <p class="proj-name">{p.name}</p>
-          <p class="proj-desc">{p.desc}</p>
-          <div class="proj-stack">
-            {p.stack.map(s => <span class="pill">{s}</span>)}
-          </div>
-        </a>
-      ))}
-    </div>
+  <!-- ── Section Links ── -->
+  <section class="section-links fade-in">
+    <a href="/threshold-notes" class="section-link">
+      <span class="section-link-label">THRESHOLD NOTES</span>
+      <span class="section-link-desc">数字思想杂志</span>
+    </a>
+    <a href="/lab" class="section-link">
+      <span class="section-link-label">MODUSENSUS LAB</span>
+      <span class="section-link-desc">实验室</span>
+    </a>
+    <a href="/archive" class="section-link">
+      <span class="section-link-label">ARCHIVE</span>
+      <span class="section-link-desc">知识档案</span>
+    </a>
+    <a href="/colophon" class="section-link">
+      <span class="section-link-label">COLOPHON</span>
+      <span class="section-link-desc">关于工作室</span>
+    </a>
   </section>
 
 </BaseLayout>
 
-<style>
-/* Hero */
-.hero {
-  padding: 3rem 2rem 2rem;
-  border-bottom: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2rem;
-  align-items: end;
-}
-.eyebrow {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--olive);
-  margin-bottom: 1rem;
-}
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(56px, 12vw, 96px);
-  line-height: 0.88;
-  letter-spacing: 0.02em;
-}
-.olive { color: var(--olive); }
-.hero-desc {
-  margin-top: 1.2rem;
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--muted);
-  max-width: 420px;
-}
-.hero-meta {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-}
+<script is:inline>
+// ── Auto-scroll editorial grid (alternating direction) ──
+(function() {
+  function initAutoScroll() {
+    var grid = document.querySelector('.editorial-grid');
+    if (!grid) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-/* Section chrome */
-.section-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 1.2rem 2rem 0.8rem;
+    var dir = 1;
+    var paused = false;
+    var speed = 0.8;
+
+    setInterval(function() {
+      if (paused) return;
+      grid.scrollLeft += dir * speed;
+      var max = grid.scrollWidth - grid.clientWidth;
+      if (grid.scrollLeft >= max - 1) dir = -1;
+      else if (grid.scrollLeft <= 1) dir = 1;
+    }, 16);
+
+    grid.addEventListener('mouseenter', function() { paused = true; });
+    grid.addEventListener('mouseleave', function() { paused = false; });
+    grid.addEventListener('touchstart', function() { paused = true; }, { passive: true });
+    grid.addEventListener('touchend', function() { paused = false; });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAutoScroll);
+  } else {
+    initAutoScroll();
+  }
+  document.addEventListener('astro:after-swap', initAutoScroll);
+})();
+</script>
+
+<style>
+/* ── Hero Banner ── */
+.hero-banner {
+  text-align: center;
+  padding: 3rem 2rem 2.5rem;
   border-bottom: 1px solid var(--border);
 }
-.section-label {
-  font-family: var(--font-display);
-  font-size: 28px;
-  letter-spacing: 0.04em;
-}
-.section-link {
+.hero-eyebrow {
   font-family: var(--font-ui);
   font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--dust);
+  margin-bottom: 0.5rem;
+}
+.hero-headline {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+.hero-rule {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.hero-rule .rule-line {
+  width: 40px;
+  height: 2px;
+  background: var(--ink);
+}
+.hero-subline {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 2rem;
+}
+.hero-tip {
+  font-family: var(--font-ui);
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
-  transition: color 0.2s;
+  color: var(--dust);
 }
-.section-link:hover { color: var(--olive); }
 
-/* Post rows */
-.posts-list { padding: 0 2rem; }
-.post-row {
-  display: grid;
-  grid-template-columns: 48px 1fr auto;
-  gap: 1rem;
-  align-items: center;
-  padding: 1rem 0;
+/* ── Editorial Grid ── horizontal scroll ── */
+.editorial-grid {
+  display: flex;
+  gap: 0;
   border-bottom: 1px solid var(--border);
-  transition: background 0.15s;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
-.post-row:hover .post-title { color: var(--olive); }
-.post-num {
-  font-family: var(--font-display);
-  font-size: 36px;
-  color: var(--border-strong);
-  line-height: 1;
+.editorial-grid::-webkit-scrollbar { height: 3px; }
+.editorial-grid::-webkit-scrollbar-track { background: transparent; }
+.editorial-grid::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+.grid-card {
+  flex: 0 0 45%;
+  min-width: 300px;
+  max-width: 480px;
+  border-right: 1px solid var(--border);
 }
-.post-title {
-  font-family: var(--font-ui);
-  font-size: 16px;
-  font-weight: 700;
-  transition: color 0.2s;
+.grid-card:last-child { border-right: none; }
+.card-link {
+  display: block;
+  padding: 1.5rem;
+  transition: background 0.2s;
 }
-.post-sub {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 2px;
-}
+.card-link:hover { background: rgba(17,17,17,0.02); }
 
-/* Project grid */
-.proj-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
+/* Placeholder images — colored blocks like the reference */
+.card-image {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+  overflow: hidden;
 }
-.proj-card {
-  background: var(--bg);
-  padding: 1.4rem;
-  transition: background 0.15s;
+.cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
-.proj-card:hover { background: rgba(107,124,74,0.06); }
-.proj-name {
-  font-family: var(--font-display);
-  font-size: 24px;
-  letter-spacing: 0.04em;
+.threshold-img {
+  background: linear-gradient(135deg, #2a1f14 0%, #5c4a32 50%, #8a7355 100%);
 }
-.proj-desc {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  line-height: 1.6;
+.lab-img {
+  background: linear-gradient(135deg, #1a2a3a 0%, #3a5a7a 50%, #6a9aba 100%);
 }
-.proj-stack {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-top: 10px;
+.archive-img {
+  background: linear-gradient(135deg, #3a3a2a 0%, #6a6a50 50%, #9a9a7a 100%);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 2rem 1.25rem;
+.card-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.card-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.new-badge {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #C0392B;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 1px;
+}
+.card-title {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.card-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dust);
+}
+
+/* ── Section Links ── */
+.section-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.section-link {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.section-link:last-child { border-right: none; }
+.section-link:hover { background: rgba(17,17,17,0.02); }
+.section-link-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.section-link-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dust);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hero-banner { padding: 2rem 1.25rem 1.5rem; }
+  .grid-card {
+    flex: 0 0 280px;
+    max-width: 280px;
   }
-  .hero-meta { display: none; }
-  .section-header,
-  .posts-list { padding-left: 1.25rem; padding-right: 1.25rem; }
-  .proj-grid { grid-template-columns: 1fr; }
-  .proj-card { padding: 1.2rem 1.25rem; }
-  .post-row { grid-template-columns: 36px 1fr; }
-  .post-row .tag { display: none; }
+  .section-links {
+    grid-template-columns: 1fr 1fr;
+  }
+  .section-link:nth-child(2) { border-right: none; }
+  .section-link:nth-child(1),
+  .section-link:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 480px) {
+  .section-links {
+    grid-template-columns: 1fr;
+  }
+  .section-link {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-link:last-child { border-bottom: none; }
 }
 </style>

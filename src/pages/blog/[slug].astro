@@ -16,8 +16,22 @@ const { Content } = await post.render();
 const tagClass: Record<string, string> = {
   '学习成长': 'tag-study',
   '项目日志': 'tag-proj',
-  '阈值笔记': 'tag-think',
+  '阈值笔记': 'tag-threshold',
 };
+
+const activeNavMap: Record<string, 'threshold' | 'lab' | 'archive'> = {
+  threshold: 'threshold',
+  lab: 'lab',
+  archive: 'archive',
+};
+const activeNav = activeNavMap[post.data.module] ?? 'archive';
+
+const moduleName: Record<string, string> = {
+  threshold: 'THRESHOLD NOTES',
+  lab: 'MODUSENSUS LAB',
+  archive: 'ARCHIVE',
+};
+const modLabel = moduleName[post.data.module] ?? 'ARCHIVE';
 ---
 
 {post.data.redirect && (
@@ -29,159 +43,226 @@ const tagClass: Record<string, string> = {
 )}
 
 {!post.data.redirect && (
-<BaseLayout title={`${post.data.title} · modusensus`} activeNav="blog">
+<BaseLayout title={`${post.data.title} · MODUSENSUS`} activeNav={activeNav}>
 
   <article class="article">
-    <!-- Article header -->
+
+    <!-- ── Magazine Masthead Bar ── -->
+    <div class="mag-masthead">
+      <span class="mag-module">{modLabel}</span>
+      {post.data.issue && <span class="mag-issue">No. {post.data.issue}</span>}
+      {post.data.category && <span class="mag-category">{post.data.category}</span>}
+    </div>
+
+    <!-- ── Article Header ── -->
     <header class="art-header">
-      <div class="art-meta">
-        <span class={`tag ${tagClass[post.data.tag] ?? 'tag-think'}`}>
-          {post.data.tag}
-        </span>
+      <h1 class="art-title">{post.data.title}</h1>
+      {post.data.subtitle && <p class="art-subtitle">{post.data.subtitle}</p>}
+      <div class="art-byline">
         <time class="art-date">
           {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
         </time>
+        {post.data.readingTime && <span class="art-reading">{post.data.readingTime} min read</span>}
       </div>
-      <h1 class="art-title">{post.data.title}</h1>
-      {post.data.excerpt && (
-        <p class="art-excerpt">{post.data.excerpt}</p>
-      )}
     </header>
 
-    <!-- Article body -->
+    <!-- ── Rule ── -->
+    <div class="art-rule"><div class="rule-line"></div></div>
+
+    <!-- ── Cover Image ── -->
+    {post.data.cover && (
+    <div class="art-cover parallax">
+      <img src={post.data.cover} alt={post.data.title} />
+    </div>
+    )}
+
+    <!-- ── Article Body ── -->
     <div class="art-body prose">
       <Content />
     </div>
 
-    <!-- Back link -->
+    <!-- ── Footer Rule + Back ── -->
+    <div class="art-rule"><div class="rule-line"></div></div>
     <div class="art-footer">
-      <a href="/blog" class="back-link">← Back to Blog</a>
+      <a href={`/${activeNav === 'threshold' ? 'threshold-notes' : activeNav === 'lab' ? 'lab' : 'archive'}`} class="back-link">
+        &larr; Back to {modLabel}
+      </a>
     </div>
+
   </article>
 
 </BaseLayout>
 )}
 
 <style>
+/* ── Article Container ── */
 .article {
-  max-width: 720px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 0 2rem 4rem;
 }
 
-/* Header */
-.art-header {
-  padding: 2.5rem 0 2rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 2.5rem;
-}
-.art-meta {
+/* ── Magazine Masthead Bar ─ */
+.mag-masthead {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
 }
-.art-date {
+.mag-module {
   font-family: var(--font-ui);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.art-title {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, 56px);
-  line-height: 0.95;
-  letter-spacing: 0.02em;
-  margin-bottom: 1rem;
-}
-.art-excerpt {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* Prose */
-.prose { font-size: 15px; line-height: 1.85; color: var(--ink); }
-.prose h2 {
-  font-family: var(--font-display);
-  font-size: 32px;
-  letter-spacing: 0.03em;
-  margin: 2.5rem 0 0.8rem;
-  line-height: 1;
-}
-.prose h3 {
-  font-family: var(--font-ui);
-  font-size: 17px;
+  font-size: 10px;
   font-weight: 700;
-  margin: 2rem 0 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
-.prose p { margin-bottom: 1.2rem; }
-.prose ul, .prose ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1.2rem;
-}
-.prose li { margin-bottom: 0.4rem; }
-.prose code {
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  background: rgba(107,124,74,0.1);
-  color: var(--olive);
-  padding: 2px 5px;
-  border-radius: 2px;
-}
-.prose pre {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 1.2rem 1.4rem;
-  border-radius: 4px;
-  overflow-x: auto;
-  margin: 1.4rem 0;
-  font-size: 13px;
-  line-height: 1.6;
-}
-.prose pre code {
-  background: none;
-  color: inherit;
-  padding: 0;
-}
-.prose blockquote {
-  border-left: 3px solid var(--olive);
-  padding-left: 1rem;
-  color: var(--muted);
-  font-style: italic;
-  margin: 1.4rem 0;
-}
-.prose a {
-  color: var(--olive);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s;
-}
-.prose a:hover { border-color: var(--olive); }
-.prose img {
-  border-radius: 4px;
-  margin: 1.5rem 0;
-  width: 100%;
-}
-.prose hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 2rem 0;
-}
-
-/* Footer */
-.art-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-.back-link {
+.mag-issue {
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.mag-category {
+  font-family: var(--font-ui);
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--dust);
+  margin-left: auto;
+}
+
+/* ── Article Header ── */
+.art-header {
+  padding: 2.5rem 0 1.5rem;
+}
+.art-title {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+.art-subtitle {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--dust);
+  margin-bottom: 1.5rem;
+  max-width: 560px;
+}
+.art-byline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.art-date {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--dust);
+}
+.art-reading {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dust);
+  padding-left: 1rem;
+  border-left: 1px solid var(--border);
+}
+
+/* ── Rule ── */
+.art-rule { margin: 0; }
+.rule-line { height: 2px; background: var(--ink); }
+
+/* ── Cover Image ── */
+.art-cover {
+  margin: 2rem 0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.art-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(100%) contrast(1.05);
+}
+
+/* ─ Prose — Magazine Typography ── */
+.prose {
+  padding: 2rem 0;
+  font-family: 'Noto Serif SC', 'SimSun', serif;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+/* Drop cap, headings, paragraphs, blockquotes, code, links, hr, reading-archive, lists — moved to global.css */
+
+/* ── Footer ─ */
+.art-footer {
+  padding: 1.5rem 0 0;
+}
+.back-link {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dust);
   transition: color 0.2s;
 }
-.back-link:hover { color: var(--olive); }
+.back-link:hover { color: var(--ink); }
 
+/* ── Responsive ── */
 @media (max-width: 640px) {
   .article { padding: 0 1.25rem 3rem; }
+  .mag-masthead { flex-wrap: wrap; gap: 0.5rem; }
+  .mag-category { margin-left: 0; }
 }
 </style>
+
+<script>
+// ── Article enhancements: drop-cap + chapter reveal ──
+function initArticle() {
+  const prose = document.querySelector('.prose');
+  if (!prose) return;
+
+  // Drop-cap on first paragraph after blockquote
+  const bq = prose.querySelector('blockquote');
+  const target = bq ? bq.nextElementSibling : prose.querySelector('p');
+  if (target) target.classList.add('drop-cap');
+
+  // Chapter reveal — h2 (number) then h3 (title) stagger
+  const headings = prose.querySelectorAll('h2, h3');
+  if (!headings.length) return;
+  headings.forEach(h => h.classList.add('chapter-reveal'));
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    headings.forEach(h => h.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  headings.forEach(h => obs.observe(h));
+}
+
+initArticle();
+document.addEventListener('astro:after-swap', initArticle);
+</script>

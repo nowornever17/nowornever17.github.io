@@ -1,0 +1,421 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  issue?: string;
+  category?: string;
+  module?: 'threshold' | 'lab' | 'archive';
+  date?: Date;
+  readingTime?: string;
+}
+
+const {
+  title,
+  subtitle,
+  issue,
+  category,
+  module = 'archive',
+  date,
+  readingTime,
+} = Astro.props;
+
+const moduleLabel: Record<string, string> = {
+  threshold: 'THRESHOLD NOTES',
+  lab: 'MODUSENSUS LAB',
+  archive: 'ARCHIVE',
+};
+
+const moduleDesc: Record<string, string> = {
+  threshold: '数字思想杂志',
+  lab: '实验室',
+  archive: '知识档案',
+};
+---
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={subtitle || title} />
+  <title>{title} · MODUSENSUS</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+</head>
+<body>
+
+  <!-- ── Masthead ── -->
+  <header class="masthead">
+    <a href="/" class="masthead-brand">MODUSENSUS</a>
+    <span class="masthead-module">{moduleLabel[module]}</span>
+  </header>
+
+  <!-- ── Article ── -->
+  <article class="article fade-in">
+
+    <!-- Issue / Category line -->
+    <div class="art-meta">
+      {issue && <span class="art-issue">NO.{issue}</span>}
+      {category && <span class="art-category">{category}</span>}
+    </div>
+
+    <!-- Title -->
+    <h1 class="art-title">{title}</h1>
+
+    {subtitle && <p class="art-subtitle">{subtitle}</p>}
+
+    <!-- Author / date line -->
+    <div class="art-author">
+      {date && <time class="art-date">
+        {date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>}
+      {readingTime && <span class="art-reading">{readingTime} min read</span>}
+    </div>
+
+    <!-- Threshold divider -->
+    <div class="threshold">
+      <div class="threshold-line"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="art-body prose">
+      <slot />
+    </div>
+
+    <!-- Back link -->
+    <div class="art-footer">
+      <a href={`/${module === 'threshold' ? 'threshold-notes' : module === 'lab' ? 'lab' : 'archive'}`} class="back-link">&larr; {moduleLabel[module]}</a>
+    </div>
+
+  </article>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <span class="footer-copy">&copy; 2026 MODUSENSUS &middot; Independent Digital Studio</span>
+  </footer>
+
+</body>
+</html>
+
+<style>
+/* ── Masthead ── */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--ink);
+  max-width: 800px;
+  margin: 0 auto;
+}
+.masthead-brand {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.masthead-module {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+}
+
+/* ── Article ── */
+.article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 28px 4rem;
+}
+
+/* Meta */
+.art-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-top: 2.5rem;
+}
+.art-issue {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+.art-category {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dust);
+}
+
+/* Title */
+.art-title {
+  font-family: var(--font-body);
+  font-size: clamp(32px, 5vw, 42px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+}
+.art-subtitle {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--dust);
+  letter-spacing: 0.02em;
+}
+
+/* Author line */
+.art-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.art-date {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--dust);
+}
+.art-reading {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--dust);
+}
+
+/* Threshold divider */
+.threshold {
+  margin: 2rem 0;
+}
+.threshold-line {
+  height: 1px;
+  background: var(--ink);
+}
+
+/* ── Prose ── */
+.prose {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 3rem 0 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.prose h3 {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid var(--border);
+}
+.prose h4 {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  margin: 1.5rem 0 0.5rem;
+}
+.prose p { margin-bottom: 1.2rem; }
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+.prose li { margin-bottom: 0.4rem; }
+.prose code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  padding: 2px 5px;
+  border-radius: 2px;
+}
+.prose pre {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.2rem 1.4rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 1.4rem 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.prose pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+/* Pull Quote — large editorial blockquote */
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* Chapter number style: ## 01 / TITLE */
+.prose .chapter-num {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--border-strong);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+/* Question blocks */
+.prose .question-block {
+  margin: 1.8em 0;
+  padding: 1.2rem 1.4rem;
+  background: #E8E5DF;
+  border-left: 3px solid var(--accent);
+}
+.prose .question-block p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 0.3em;
+}
+
+/* Links */
+.prose a {
+  color: var(--accent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.prose a:hover { border-bottom-color: var(--accent); }
+
+.prose img {
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* Reading Archive section */
+.prose .reading-archive {
+  margin: 3rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dust);
+}
+.prose .reading-archive-title {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dust);
+  margin-bottom: 1rem;
+}
+.prose .reading-archive ol {
+  list-style: none;
+  counter-reset: refs;
+  padding-left: 0;
+}
+.prose .reading-archive li {
+  counter-increment: refs;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--dust);
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+.prose .reading-archive li::before {
+  content: counter(refs);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Footer */
+.art-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.back-link {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dust);
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+/* Page footer */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer-copy {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--dust);
+  letter-spacing: 0.06em;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .masthead { padding: 10px 20px; }
+  .article { padding: 0 20px 3rem; }
+  .art-title { font-size: 28px; }
+  .prose { font-size: 16px; }
+  .prose blockquote { font-size: 18px; }
+}
+</style>
+
+<script>
+// Fade-in observer for EditorialLayout pages
+const fadeEls = document.querySelectorAll('.fade-in');
+if (fadeEls.length) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  fadeEls.forEach(el => obs.observe(el));
+}
+</script>

@@ -1,0 +1,608 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const techStack = [
+  'Python', 'GIS', 'n8n', 'React', 'TypeScript',
+  'Tauri', 'SQLite', 'Obsidian', 'DeepSeek API',
+  'Astro', 'MDX', 'GitHub Pages',
+];
+
+const interests = [
+  { label: '空间公平与城市可达性', cat: 'RESEARCH' },
+  { label: '数字治理与 AI 政策', cat: 'RESEARCH' },
+  { label: '人机协作与自动化工作流', cat: 'RESEARCH' },
+  { label: '公共服务设施布局优化', cat: 'RESEARCH' },
+];
+
+const projects = [
+  {
+    name: 'CaseForge',
+    desc: '学术论文深度拆解框架。8 字段结构化提取 + 4 格式输出，多学科 Prompt 插件化。',
+    link: 'https://github.com/modusensus/CaseForge',
+  },
+  {
+    name: 'MindOS',
+    desc: 'AI 驱动的个人成长系统。8 模块单文件 HTML Widget，支持多 AI 提供商。',
+    link: 'https://github.com/modusensus/Mindos',
+  },
+];
+---
+
+<BaseLayout title="Colophon · MODUSENSUS" activeNav="colophon">
+
+  <div class="page fade-in">
+
+    <!-- ── Masthead ── -->
+    <header class="masthead">
+      <div class="masthead-eyebrow">
+        <span class="eyebrow-issue">NO. 00</span>
+        <span class="eyebrow-date">EST. 2026</span>
+      </div>
+      <h1 class="masthead-title">COLOPHON</h1>
+      <p class="masthead-sub">MODUSENSUS — Independent Digital Studio</p>
+      <div class="masthead-rule"><div class="rule-line"></div></div>
+    </header>
+
+    <!-- ── Two-column editorial layout ── -->
+    <div class="editorial-grid">
+
+      <!-- Left column: narrative -->
+      <div class="col-left">
+
+        <section class="section">
+          <h2 class="section-label">01 — Studio</h2>
+          <p class="narrative">
+            MODUSENSUS 是一个长期运营的数字思想工作室。
+          </p>
+          <p class="narrative">
+            <strong>Modus</strong>：方式、方法、模式。<br />
+            <strong>Sensus</strong>：感知、理解、意义。
+          </p>
+          <p class="narrative muted">
+            Exploring ideas, technology and human creativity.<br />
+            探索思想、技术与人类创造力。
+          </p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-label">02 — Typography</h2>
+          <div class="type-specimen">
+            <div class="specimen-row">
+              <span class="specimen-label">Display</span>
+              <span class="specimen-value font-display">Space Grotesk</span>
+            </div>
+            <div class="specimen-row">
+              <span class="specimen-label">Body</span>
+              <span class="specimen-value font-body">Noto Serif SC</span>
+            </div>
+            <div class="specimen-row">
+              <span class="specimen-label">UI</span>
+              <span class="specimen-value font-ui">Inter</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-label">03 — Paper</h2>
+          <div class="color-specimen">
+            <div class="color-swatch">
+              <div class="swatch" style="background:#F5F2EC;border:1px solid var(--border)"></div>
+              <div>
+                <span class="swatch-name">Paper</span>
+                <span class="swatch-hex">#F5F2EC</span>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#111111"></div>
+              <div>
+                <span class="swatch-name">Ink</span>
+                <span class="swatch-hex">#111111</span>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#88847D"></div>
+              <div>
+                <span class="swatch-name">Dust</span>
+                <span class="swatch-hex">#88847D</span>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#65704A"></div>
+              <div>
+                <span class="swatch-name">Accent</span>
+                <span class="swatch-hex">#65704A</span>
+              </div>
+            </div>
+          </div>
+          <p class="narrative muted" style="margin-top:1rem;font-size:13px;">
+            This website does not have dark mode. It is designed like paper, not software.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-label">04 — Built With</h2>
+          <p class="narrative">
+            Astro · Markdown / MDX · GitHub Pages
+          </p>
+          <p class="narrative muted" style="font-size:13px;">
+            No frameworks. No build complexity. Just content.
+          </p>
+        </section>
+
+      </div>
+
+      <!-- Right column: data / interactive -->
+      <div class="col-right">
+
+        <!-- Tech Stack -->
+        <section class="section">
+          <h2 class="section-label">Tech Stack</h2>
+          <div class="tech-grid">
+            {techStack.map(t => (
+              <span class="tech-pill">{t}</span>
+            ))}
+          </div>
+        </section>
+
+        <!-- Research Interests -->
+        <section class="section">
+          <h2 class="section-label">Research Interests</h2>
+          <div class="interest-list">
+            {interests.map(item => (
+              <div class="interest-row">
+                <span class="interest-cat">{item.cat}</span>
+                <span class="interest-label">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="section">
+          <h2 class="section-label">Projects</h2>
+          <div class="project-list">
+            {projects.map(p => (
+              <a href={p.link} target="_blank" rel="noopener noreferrer" class="project-row">
+                <span class="project-name">{p.name}</span>
+                <span class="project-desc">{p.desc}</span>
+                <span class="project-arrow">↗</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <!-- Subscribe -->
+        <section class="section subscribe-section">
+          <h2 class="section-label">Subscribe</h2>
+          <p class="subscribe-desc">
+            Get notified when I publish new articles. No spam, unsubscribe anytime.
+          </p>
+          <form action="https://buttondown.email/api/emails/embed-subscribe/your-username" method="post" target="_blank" class="subscribe-form">
+            <input type="email" name="email" placeholder="your@email.com" required class="subscribe-input">
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+          </form>
+          <p class="subscribe-foot">
+            Powered by Buttondown · <a href="https://buttondown.email" class="co-link">Set up for free</a>
+          </p>
+        </section>
+
+        <!-- Contact -->
+        <section class="section">
+          <h2 class="section-label">Contact</h2>
+          <div class="contact-grid">
+            <a href="https://github.com/modusensus" target="_blank" class="contact-btn">
+              <span class="contact-label">GitHub</span>
+              <span class="contact-arrow"></span>
+            </a>
+            <a href="mailto:1668531760@qq.com" class="contact-btn">
+              <span class="contact-label">Email</span>
+              <span class="contact-arrow"></span>
+            </a>
+            <a href="https://modusensus.substack.com" target="_blank" class="contact-btn">
+              <span class="contact-label">Substack</span>
+              <span class="contact-arrow">↗</span>
+            </a>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- ── Footer rule ── -->
+    <div class="footer-rule"><div class="rule-line"></div></div>
+    <p class="page-copy">&copy; 2026 MODUSENSUS. All rights reserved.</p>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+/* ── Page ── */
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+/* ─ Masthead ── */
+.masthead {
+  padding: 4rem 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.masthead-eyebrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.eyebrow-issue,
+.eyebrow-date {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow-date { color: var(--dust); }
+.masthead-title {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 10vw, 96px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+  margin-bottom: 0.6rem;
+}
+.masthead-sub {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--dust);
+  text-transform: uppercase;
+}
+.masthead-rule { margin-top: 2rem; }
+.rule-line { height: 2px; background: var(--ink); }
+
+/* ── Editorial Grid ── */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.col-left {
+  padding: 2.5rem 2.5rem 2.5rem 0;
+  border-right: 1px solid var(--border);
+}
+.col-right {
+  padding: 2.5rem 0 2.5rem 2.5rem;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 2.5rem;
+}
+.section:last-child { margin-bottom: 0; }
+.section-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dust);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* ── Narrative ── */
+.narrative {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+}
+.narrative strong { font-weight: 700; }
+.narrative.muted { color: var(--dust); }
+
+/* ─ Type Specimen ── */
+.type-specimen {
+  border: 0.5px solid var(--border);
+}
+.specimen-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.75rem 1rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.specimen-row:last-child { border-bottom: none; }
+.specimen-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dust);
+}
+.specimen-value {
+  font-size: 15px;
+  color: var(--ink);
+}
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+.font-ui      { font-family: var(--font-ui); }
+
+/* ── Color Specimen ── */
+.color-specimen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 0.5px solid var(--border);
+}
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.color-swatch:nth-child(odd)  { border-right: 0.5px solid var(--border); }
+.color-swatch:nth-last-child(-n+2) { border-bottom: none; }
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.swatch-name {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.swatch-hex {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--dust);
+  letter-spacing: 0.04em;
+}
+
+/* ── Tech Stack ── */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tech-pill {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 2px;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.tech-pill:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ── Research Interests ── */
+.interest-list {
+  border: 0.5px solid var(--border);
+}
+.interest-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.interest-row:last-child { border-bottom: none; }
+.interest-cat {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 64px;
+}
+.interest-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* ── Projects ── */
+.project-list {
+  border: 0.5px solid var(--border);
+}
+.project-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 0.5px solid var(--border);
+  transition: background 0.15s;
+}
+.project-row:last-child { border-bottom: none; }
+.project-row:hover { background: rgba(101,112,74,0.04); }
+.project-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  flex-shrink: 0;
+  width: 100px;
+}
+.project-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--dust);
+  line-height: 1.5;
+  flex: 1;
+}
+.project-arrow {
+  font-size: 14px;
+  color: var(--dust);
+  flex-shrink: 0;
+  transition: color 0.2s, transform 0.2s;
+}
+.project-row:hover .project-arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ── Subscribe ── */
+.subscribe-section {
+  padding: 1.5rem;
+  background: #EDEAE4;
+  border: 0.5px solid var(--border);
+}
+.subscribe-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dust);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.subscribe-form {
+  display: flex;
+  gap: 8px;
+}
+.subscribe-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 0.5px solid var(--border-strong);
+  background: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+.subscribe-input:focus { border-color: var(--accent); }
+.subscribe-input::placeholder { color: var(--dust); }
+.subscribe-btn {
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.subscribe-btn:hover { opacity: 0.85; }
+.subscribe-foot {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--dust);
+  margin-top: 0.75rem;
+}
+.co-link {
+  color: var(--accent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.co-link:hover { border-bottom-color: var(--accent); }
+
+/* ── Contact ── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border: 0.5px solid var(--border);
+}
+.contact-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-right: 0.5px solid var(--border);
+  transition: all 0.15s;
+}
+.contact-btn:last-child { border-right: none; }
+.contact-btn:hover {
+  background: var(--ink);
+}
+.contact-btn:hover .contact-label { color: var(--paper); }
+.contact-btn:hover .contact-arrow { color: var(--paper); }
+.contact-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color 0.15s;
+}
+.contact-arrow {
+  font-size: 14px;
+  color: var(--dust);
+  transition: all 0.2s;
+}
+
+/* ─ Footer ── */
+.footer-rule { margin-top: 2rem; }
+.page-copy {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--dust);
+  letter-spacing: 0.08em;
+  margin-top: 0.75rem;
+}
+
+/* ─ Responsive ── */
+@media (max-width: 768px) {
+  .page { padding: 0 1.25rem 3rem; }
+  .masthead { padding: 2.5rem 0 1.5rem; }
+  .editorial-grid {
+    grid-template-columns: 1fr;
+  }
+  .col-left {
+    padding: 2rem 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .col-right {
+    padding: 2rem 0 0;
+  }
+  .color-specimen { grid-template-columns: 1fr; }
+  .color-swatch:nth-child(odd) { border-right: none; }
+  .color-swatch:nth-last-child(-n+2) { border-bottom: 0.5px solid var(--border); }
+  .color-swatch:last-child { border-bottom: none; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-btn { border-right: none; border-bottom: 0.5px solid var(--border); }
+  .contact-btn:last-child { border-bottom: none; }
+  .project-row { flex-direction: column; gap: 0.25rem; }
+  .project-name { width: auto; }
+}
+
+@media (max-width: 480px) {
+  .masthead-title { font-size: 48px; }
+  .subscribe-form { flex-direction: column; }
+  .subscribe-btn { width: 100%; text-align: center; }
+}
+</style>

@@ -3,132 +3,108 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog');
-const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = allPosts
+  .filter(p => !p.data.redirect)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const tags = ['全部', '学习成长', '项目日志', '阈值笔记'];
-
-const tagClass: Record<string, string> = {
-  '学习成长': 'tag-study',
-  '项目日志': 'tag-proj',
-  '阈值笔记': 'tag-think',
+const moduleLabel: Record<string, string> = {
+  threshold: 'THRESHOLD NOTES',
+  lab: 'MODUSENSUS LAB',
+  archive: 'ARCHIVE',
 };
 ---
 
-<BaseLayout title="Blog · modusensus" activeNav="blog">
+<BaseLayout title="All Publications · MODUSENSUS" activeNav="archive">
 
-  <div class="page-header">
-    <h1 class="page-title">BLOG.</h1>
+  <div class="page-header fade-in">
+    <h1 class="page-title">ALL PUBLICATIONS</h1>
+    <p class="page-sub">Complete archive of all essays, lab logs and notes.</p>
   </div>
 
-  <!-- Tag filters (client-side) -->
-  <div class="filters" id="filters">
-    {tags.map(t => (
-      <button
-        class:list={['filter-btn', { active: t === '全部' }]}
-        data-tag={t}
-      >
-        {t}
-      </button>
-    ))}
-  </div>
-
-  <!-- Article list -->
-  <div class="article-list" id="article-list">
+  <div class="article-list fade-in">
     {posts.map((post, i) => (
       <a
-        href={post.data.redirect || `/blog/${post.slug}`}
+        href={`/blog/${post.slug}`}
         class="article-card"
-        data-tag={post.data.tag}
       >
         <div class="article-left">
           <p class="article-date">
             {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-            &nbsp;·&nbsp;{post.data.tag}
+            &nbsp;&middot;&nbsp;
+            <span class="article-module">{moduleLabel[post.data.module] ?? 'ARCHIVE'}</span>
           </p>
           <h2 class="article-title">{post.data.title}</h2>
-          <p class="article-excerpt">{post.data.excerpt}</p>
+          {(post.data.subtitle || post.data.excerpt) && (
+            <p class="article-excerpt">{post.data.subtitle || post.data.excerpt}</p>
+          )}
         </div>
         <div class="article-right">
-          <span class="article-num">0{i + 1}</span>
-          <span class={`tag ${tagClass[post.data.tag] ?? 'tag-think'}`}>
-            {post.data.tag}
-          </span>
+          <span class="article-num">{String(i + 1).padStart(2, '0')}</span>
+          {post.data.issue && <span class="article-issue">NO.{post.data.issue}</span>}
         </div>
       </a>
     ))}
   </div>
 
+  {posts.length === 0 && (
+    <section class="empty">
+      <p class="empty-text">暂无文章，敬请期待。</p>
+    </section>
+  )}
+
 </BaseLayout>
 
 <style>
 .page-header {
-  padding: 2rem 2rem 1rem;
+  padding: 3rem 2rem 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 .page-title {
   font-family: var(--font-display);
-  font-size: clamp(40px, 8vw, 64px);
+  font-size: clamp(36px, 7vw, 56px);
   letter-spacing: 0.04em;
   line-height: 1;
 }
-
-/* Filters */
-.filters {
-  padding: 1rem 2rem;
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--border);
-}
-.filter-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 2px;
-  border: 0.5px solid var(--border-strong);
-  background: transparent;
-  color: var(--muted);
-  transition: all 0.15s;
-}
-.filter-btn.active,
-.filter-btn:hover {
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
+.page-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dust);
+  margin-top: 0.75rem;
 }
 
-/* Article list */
 .article-list { padding: 0 2rem; }
 .article-card {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 1.5rem;
-  padding: 1.4rem 0;
+  padding: 1.6rem 0;
   border-bottom: 1px solid var(--border);
   transition: opacity 0.2s;
+  text-decoration: none;
 }
-.article-card[hidden] { display: none; }
-.article-card:hover .article-title { color: var(--olive); }
+.article-card:hover .article-title { color: var(--accent); }
 
 .article-date {
   font-family: var(--font-ui);
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  color: var(--dust);
   margin-bottom: 4px;
+}
+.article-module {
+  text-transform: uppercase;
+  font-weight: 600;
 }
 .article-title {
   font-family: var(--font-ui);
   font-size: 18px;
   font-weight: 700;
+  color: var(--ink);
   transition: color 0.2s;
 }
 .article-excerpt {
   font-size: 13px;
-  color: var(--muted);
+  color: var(--dust);
   margin-top: 4px;
   line-height: 1.7;
 }
@@ -141,35 +117,33 @@ const tagClass: Record<string, string> = {
 }
 .article-num {
   font-family: var(--font-display);
-  font-size: 44px;
+  font-size: 40px;
   color: var(--border-strong);
   line-height: 1;
 }
+.article-issue {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
 
-/* Responsive */
+.empty {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.empty-text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--dust);
+}
+
 @media (max-width: 640px) {
   .page-header,
-  .filters,
   .article-list { padding-left: 1.25rem; padding-right: 1.25rem; }
   .article-card { grid-template-columns: 1fr; gap: 0.5rem; }
   .article-right { flex-direction: row; align-items: center; }
   .article-num { font-size: 28px; }
 }
 </style>
-
-<script>
-const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-const cards      = document.querySelectorAll<HTMLAnchorElement>('.article-card');
-
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const selected = btn.dataset.tag ?? '全部';
-    cards.forEach(card => {
-      const match = selected === '全部' || card.dataset.tag === selected;
-      card.hidden = !match;
-    });
-  });
-});
-</script>

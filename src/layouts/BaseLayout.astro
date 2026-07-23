@@ -1,23 +1,25 @@
 ---
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title?: string;
   description?: string;
-  activeNav?: 'home' | 'blog' | 'projects' | 'about';
+  activeNav?: 'home' | 'threshold' | 'lab' | 'archive' | 'colophon';
 }
 
 const {
-  title = 'modusensus',
-  description = '跨考公管 · INTJ · AI 学习系统 · 知度',
+  title = 'MODUSENSUS',
+  description = 'Exploring ideas, technology and human creativity.',
   activeNav = 'home',
 } = Astro.props;
 
 const navLinks = [
-  { href: '/',         label: 'Home',     key: 'home'     },
-  { href: '/blog',     label: 'Blog',     key: 'blog'     },
-  { href: '/projects', label: 'Projects', key: 'projects' },
-  { href: '/about',    label: 'About',    key: 'about'    },
+  { href: '/',               label: 'Home',            key: 'home'      },
+  { href: '/threshold-notes', label: 'Threshold Notes', key: 'threshold' },
+  { href: '/lab',            label: 'Lab',             key: 'lab'       },
+  { href: '/archive',        label: 'Archive',         key: 'archive'   },
+  { href: '/colophon',       label: 'Colophon',        key: 'colophon'  },
 ];
 ---
 
@@ -29,29 +31,36 @@ const navLinks = [
   <meta name="description" content={description} />
   <title>{title}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
+  <ViewTransitions />
 </head>
 <body>
 
-  <!-- ── Nav ── -->
-  <nav class="nav">
-    <a href="/" class="nav-logo">modusensus.</a>
-    <div class="nav-links">
-      {navLinks.map(link => (
-        <a
-          href={link.href}
-          class:list={['nav-link', { active: activeNav === link.key }]}
-        >
-          {link.label}
-        </a>
-      ))}
+  <!-- ── Reading progress bar (article pages) ── -->
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+
+  <!-- ── Masthead ── -->
+  <header class="masthead entrance entrance-1">
+    <div class="masthead-center">
+      <a href="/" class="masthead-title">MODUSENSUS</a>
     </div>
-    <button class="theme-toggle" id="theme-toggle" aria-label="切换主题" title="切换暗色/亮色">
-      🌓
-    </button>
-    <button class="nav-menu" aria-label="菜单" id="menu-toggle">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="masthead-right">
+      <button class="masthead-menu" aria-label="Menu" id="menu-toggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Sub-nav bar ── -->
+  <nav class="subnav entrance entrance-1">
+    {navLinks.map(link => (
+      <a
+        href={link.href}
+        class:list={['subnav-link', { active: activeNav === link.key }]}
+      >
+        {link.label}
+      </a>
+    ))}
+
   </nav>
 
   <!-- ── Mobile menu ── -->
@@ -73,155 +82,210 @@ const navLinks = [
 
   <!-- ── Footer ── -->
   <footer class="footer">
-    <span class="footer-copy">© 2026 modusensus · Built with Astro · <a href="/rss.xml" style="color:inherit">RSS</a></span>
-    <span class="footer-logo">M.</span>
+    <div class="footer-inner">
+      <span class="footer-copy">&copy; 2026 MODUSENSUS &middot; Independent Digital Studio</span>
+
+    </div>
   </footer>
 
 </body>
 </html>
 
 <style>
-/* ── Nav ── */
-.nav {
+/* ── Masthead ── */
+.masthead {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
+  justify-content: center;
+  padding: 0.75rem 2rem;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: var(--bg);
-  z-index: 100;
+  position: relative;
+}
+.masthead-right {
+  position: absolute;
+  right: 2rem;
+}
+.masthead-center {
+  text-align: center;
+}
+.masthead-location {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--dust);
+}
+.masthead-title {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.masthead-menu {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+.masthead-menu span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--ink);
 }
 
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 22px;
-  letter-spacing: 0.05em;
+/* ── Sub-nav ── */
+.subnav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.6rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+.subnav-link {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dust);
+  transition: color 0.2s;
+}
+.subnav-link:hover,
+.subnav-link.active {
   color: var(--ink);
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
+/* ── Mobile menu ── */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border);
 }
-
-.nav-link {
+.mobile-menu.open { display: flex; }
+.mobile-link {
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
-  transition: color 0.2s;
-}
-.nav-link:hover,
-.nav-link.active {
-  color: var(--ink);
-}
-
-/* Theme toggle */
-.theme-toggle {
-  background: none;
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.2s, color 0.2s;
-  line-height: 1;
-  color: var(--ink);
-}
-.theme-toggle:hover { background: var(--olive-bg); }
-
-/* Hamburger (mobile) */
-.nav-menu {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  padding: 4px;
-}
-.nav-menu span {
-  display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--ink);
-  transition: transform 0.2s;
-}
-
-/* Mobile menu */
-.mobile-menu {
-  display: none;
-  flex-direction: column;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-}
-.mobile-menu.open { display: flex; }
-.mobile-link {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
-  color: var(--muted);
+  color: var(--dust);
 }
 .mobile-link.active { color: var(--ink); }
 
 /* ── Footer ── */
 .footer {
   border-top: 1px solid var(--border);
-  padding: 1rem 2rem;
+  margin-top: auto;
+}
+.footer-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  padding: 1rem 2rem;
 }
 .footer-copy {
   font-family: var(--font-ui);
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 10px;
+  color: var(--dust);
   letter-spacing: 0.06em;
 }
-.footer-logo {
-  font-family: var(--font-display);
-  font-size: 18px;
-  color: var(--muted);
-}
+
 
 /* ── Responsive ── */
-@media (max-width: 640px) {
-  .nav-links   { display: none; }
-  .nav-menu    { display: flex; }
+@media (max-width: 768px) {
+  .masthead { padding: 0.75rem 1.25rem; }
+  .masthead-right { right: 1.25rem; }
+  .masthead-title { font-size: 22px; }
+  .masthead-menu { display: flex; }
+  .subnav {
+    display: none;
+  }
+  .footer-inner { padding: 1rem 1.25rem; }
 }
 </style>
 
 <script>
-const toggle = document.getElementById('menu-toggle');
-const menu   = document.getElementById('mobile-menu');
-toggle?.addEventListener('click', () => menu?.classList.toggle('open'));
-
-// Theme toggle
-const themeBtn = document.getElementById('theme-toggle');
-const html = document.documentElement;
-const saved = localStorage.getItem('theme');
-if (saved) html.setAttribute('data-theme', saved);
-function updateThemeLabel() {
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  themeBtn.textContent = isDark ? 'LIGHT' : 'DARK';
+// ── Mobile menu toggle ──
+function initMenu() {
+  const toggle = document.getElementById('menu-toggle');
+  const menu   = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => menu?.classList.toggle('open'));
 }
-themeBtn?.addEventListener('click', () => {
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  updateThemeLabel();
-});
-updateThemeLabel();
+
+// ── Scroll reveal observer (fade-in + reveal + reveal-stagger) ──
+function initReveal() {
+  const els = document.querySelectorAll('.fade-in, .reveal, .reveal-stagger');
+  if (!els.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
+}
+
+// ── Reading progress bar (article pages) ──
+function initReadingProgress() {
+  const bar = document.getElementById('reading-progress');
+  if (!bar) return;
+  const article = document.querySelector('article.article') || document.body;
+  const update = () => {
+    const rect = article.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const scrolled = Math.max(0, -rect.top);
+    const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
+    bar.style.width = pct + '%';
+    bar.style.opacity = pct > 0 && pct < 100 ? '1' : '0';
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+// ── Parallax (subtle magazine depth) ──
+function initParallax() {
+  const els = document.querySelectorAll('.parallax');
+  if (!els.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  let ticking = false;
+  const update = () => {
+    els.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (rect.bottom < 0 || rect.top > vh) return;
+      const offset = (rect.top + rect.height / 2 - vh / 2) / vh;
+      el.style.transform = `translateY(${(-offset * 12).toFixed(2)}px)`;
+    });
+    ticking = false;
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
+}
+
+// ── Initialize on load + View Transitions ──
+function initAll() {
+  initMenu();
+  initReveal();
+  initReadingProgress();
+  initParallax();
+}
+initAll();
+document.addEventListener('astro:after-swap', initAll);
 </script>

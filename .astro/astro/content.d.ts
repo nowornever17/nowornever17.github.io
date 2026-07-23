@@ -152,13 +152,20 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
-"mindos-devlog.md": {
-	id: "mindos-devlog.md";
-  slug: "mindos-devlog";
+"archive-01.mdx": {
+	id: "archive-01.mdx";
+  slug: "archive-01";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
+"lab-01.mdx": {
+	id: "lab-01.mdx";
+  slug: "lab-01";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".mdx"] };
 "threshold-notes-01.mdx": {
 	id: "threshold-notes-01.mdx";
   slug: "threshold-notes-01";
@@ -176,5 +183,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = typeof import("../../src/content/config.js");
+	export type ContentConfig = typeof import("./../../src/content/config.js");
 }

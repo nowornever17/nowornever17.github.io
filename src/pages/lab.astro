@@ -1,0 +1,252 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(p => p.data.module === 'lab' || p.data.tag === '项目日志')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const projects = [
+  {
+    name: 'CaseForge',
+    desc: '学术论文深度拆解框架。8 字段结构化提取 + 4 格式输出，多学科 Prompt 插件化，3 大论文库聚合搜索。',
+    stack: ['Python', 'DeepSeek', 'LLM', 'OpenAlex'],
+    status: 'v2.0',
+    href: 'https://github.com/modusensus/CaseForge',
+  },
+  {
+    name: 'MindOS',
+    desc: 'AI 驱动的个人成长系统。8 模块单文件 HTML Widget，支持多 AI 提供商，语音输入，AI 教练监督。',
+    stack: ['HTML/CSS/JS', 'Multi-AI', 'Claude Artifacts'],
+    status: 'Active',
+    href: 'https://github.com/modusensus/Mindos',
+  },
+];
+---
+
+<BaseLayout title="MODUSENSUS Lab · MODUSENSUS" activeNav="lab">
+
+  <!-- ── Page Header ── -->
+  <section class="page-header fade-in">
+    <h1 class="page-title">MODUSENSUS LAB</h1>
+    <p class="page-sub">实验室</p>
+    <p class="page-tags">AI experiments / tools / automation / systems</p>
+  </section>
+
+  <!-- ── Featured Projects ── -->
+  <section class="projects fade-in">
+    <h2 class="section-label">Featured Projects</h2>
+    <div class="project-grid">
+      {projects.map(p => (
+        <a href={p.href} target="_blank" rel="noopener noreferrer" class="project-card">
+          <h3 class="project-name">{p.name}</h3>
+          <p class="project-desc">{p.desc}</p>
+          <div class="project-stack">
+            {p.stack.map(s => <span class="pill">{s}</span>)}
+          </div>
+          <div class="project-footer">
+            <span class:list={['project-status', p.status === 'Completed' ? 'status-done' : 'status-wip']}>
+              {p.status}
+            </span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Lab Articles ── -->
+  {posts.length > 0 && (
+  <section class="articles fade-in">
+    <h2 class="section-label">项目日志</h2>
+    <div class="article-list">
+      {posts.map(post => (
+        <article class="article-row">
+          <time class="article-date">
+            {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+          <div class="article-body">
+            <h3 class="article-title">{post.data.title}</h3>
+            {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
+          </div>
+          <a href={`/blog/${post.slug}`} class="article-link">READ &rarr;</a>
+        </article>
+      ))}
+    </div>
+  </section>
+  )}
+
+</BaseLayout>
+
+<style>
+/* ── Page Header ── */
+.page-header {
+  padding: 5rem 2rem 3rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 10vw, 72px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.page-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--dust);
+  margin-top: 1rem;
+}
+.page-tags {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--dust);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+/* ── Section Label ── */
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 2rem 2rem 1rem;
+}
+
+/* ── Project Cards ── */
+.projects {
+  border-bottom: 1px solid var(--border);
+}
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+  padding: 0 2rem 2rem;
+}
+.project-card {
+  background: var(--paper);
+  padding: 2rem;
+  display: block;
+  transition: background 0.15s;
+}
+.project-card:hover { background: rgba(101,112,74,0.06); }
+.project-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+.project-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--dust);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.project-stack {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.project-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.project-status {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.status-done { background: var(--ink); color: var(--paper); }
+.status-wip  { background: var(--accent-bg); color: var(--accent-text); }
+.project-arrow {
+  font-size: 16px;
+  color: var(--dust);
+  transition: color 0.2s, transform 0.2s;
+}
+.project-card:hover .project-arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ── Lab Articles ── */
+.articles {
+  border-bottom: 1px solid var(--border);
+}
+.article-list {
+  padding: 0 2rem;
+}
+.article-row {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: 2rem;
+  align-items: start;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.article-date {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--dust);
+}
+.article-title {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+}
+.article-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--dust);
+}
+.article-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+  align-self: center;
+  transition: opacity 0.2s;
+}
+.article-link:hover { opacity: 0.7; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page-header { padding: 3rem 1.25rem 2rem; }
+  .project-grid { grid-template-columns: 1fr; padding: 0 1.25rem 1.25rem; }
+  .project-card { padding: 1.5rem 1.25rem; }
+  .article-list { padding: 0 1.25rem; }
+  .article-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1.5rem 0;
+  }
+  .article-link { align-self: start; }
+  .section-label { padding: 1.5rem 1.25rem 0.75rem; }
+}
+</style>

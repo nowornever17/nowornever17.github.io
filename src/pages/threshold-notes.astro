@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(p => p.data.module === 'threshold' || p.data.tag === '阈值笔记')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Threshold Notes · MODUSENSUS" activeNav="threshold">
+
+  <!-- ── Page Header ── -->
+  <section class="page-header fade-in">
+    <h1 class="page-title">THRESHOLD NOTES</h1>
+    <p class="page-sub">数字思想杂志</p>
+  </section>
+
+  <!-- ── Article List ── -->
+  <section class="article-list fade-in">
+    {posts.map(post => (
+      <article class="article-row">
+        <div class="article-meta">
+          {post.data.issue && <span class="article-issue">NO.{post.data.issue}</span>}
+          <time class="article-date">
+            {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+          {post.data.category && <span class="tag tag-threshold">{post.data.category}</span>}
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">{post.data.title}</h2>
+          {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
+        </div>
+        <a href={`/blog/${post.slug}`} class="article-link">READ &rarr;</a>
+      </article>
+    ))}
+  </section>
+
+  {posts.length === 0 && (
+    <section class="empty fade-in">
+      <p class="empty-text">暂无文章，敬请期待。</p>
+    </section>
+  )}
+
+</BaseLayout>
+
+<style>
+/* ── Page Header ── */
+.page-header {
+  padding: 5rem 2rem 3rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 10vw, 72px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.page-sub {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--dust);
+  margin-top: 1rem;
+}
+
+/* ── Article List ── */
+.article-list {
+  padding: 0 2rem;
+}
+
+.article-row {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 2rem;
+  align-items: start;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.article-issue {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.article-date {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--dust);
+}
+
+.article-body {
+  min-width: 0;
+}
+
+.article-title {
+  font-family: var(--font-body);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--dust);
+}
+
+.article-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+  align-self: center;
+  transition: opacity 0.2s;
+}
+.article-link:hover { opacity: 0.7; }
+
+/* ── Empty ── */
+.empty {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.empty-text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--dust);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page-header { padding: 3rem 1.25rem 2rem; }
+  .article-list { padding: 0 1.25rem; }
+  .article-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 2rem 0;
+  }
+  .article-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .article-title { font-size: 22px; }
+  .article-link {
+    align-self: start;
+  }
+}
+</style>
