@@ -60,17 +60,28 @@ const projects = [
   {posts.length > 0 && (
   <section class="articles fade-in">
     <h2 class="section-label">项目日志</h2>
-    <div class="article-list">
+    <div class="card-grid">
       {posts.map(post => (
-        <article class="article-row">
-          <time class="article-date">
-            {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </time>
-          <div class="article-body">
-            <h3 class="article-title">{post.data.title}</h3>
-            {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
-          </div>
-          <a href={`/blog/${post.slug}`} class="article-link">READ &rarr;</a>
+        <article class="card-item">
+          <a href={`/blog/${post.slug}`} class="card-link">
+            <div class="card-image cover-img">
+              {post.data.cover ? (
+                <img src={post.data.cover} alt={post.data.title} />
+              ) : (
+                <div class="placeholder-img lab-img"></div>
+              )}
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <time class="card-date">
+                  {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </time>
+                {post.data.category && <span class="tag tag-lab">{post.data.category}</span>}
+              </div>
+              <h3 class="card-title">{post.data.title}</h3>
+              {post.data.subtitle && <p class="card-subtitle">{post.data.subtitle}</p>}
+            </div>
+          </a>
         </article>
       ))}
     </div>
@@ -189,64 +200,98 @@ const projects = [
 .articles {
   border-bottom: 1px solid var(--border);
 }
-.article-list {
-  padding: 0 2rem;
-}
-.article-row {
+.card-grid {
   display: grid;
-  grid-template-columns: 180px 1fr auto;
-  gap: 2rem;
-  align-items: start;
-  padding: 2rem 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+.card-item {
+  border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
-.article-date {
+.card-item:nth-child(2n) { border-right: none; }
+.card-link {
+  display: block;
+  padding: 1.5rem;
+  transition: background 0.2s;
+}
+.card-link:hover { background: rgba(17,17,17,0.02); }
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .cover-img img { transform: scale(1.03); }
+.placeholder-img {
+  width: 100%;
+  height: 100%;
+}
+.lab-img {
+  background: linear-gradient(135deg, #1a2a3a 0%, #3a5a7a 50%, #6a9aba 100%);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.card-date {
   font-family: var(--font-ui);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--dust);
 }
-.article-title {
+
+.card-title {
   font-family: var(--font-body);
   font-size: clamp(20px, 2.5vw, 26px);
   font-weight: 700;
   line-height: 1.3;
   margin-bottom: 0.4rem;
+  position: relative;
+  display: inline-block;
 }
-.article-subtitle {
+.card-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .card-title::after { width: 100%; }
+
+.card-subtitle {
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--dust);
 }
-.article-link {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 2px;
-  align-self: center;
-  transition: opacity 0.2s;
-}
-.article-link:hover { opacity: 0.7; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .page-header { padding: 3rem 1.25rem 2rem; }
   .project-grid { grid-template-columns: 1fr; padding: 0 1.25rem 1.25rem; }
   .project-card { padding: 1.5rem 1.25rem; }
-  .article-list { padding: 0 1.25rem; }
-  .article-row {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    padding: 1.5rem 0;
-  }
-  .article-link { align-self: start; }
+  .card-grid { grid-template-columns: 1fr; }
+  .card-item { border-right: none; }
+  .card-title { font-size: 20px; }
   .section-label { padding: 1.5rem 1.25rem 0.75rem; }
 }
 </style>

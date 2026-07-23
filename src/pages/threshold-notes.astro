@@ -16,22 +16,30 @@ const posts = allPosts
     <p class="page-sub">数字思想杂志</p>
   </section>
 
-  <!-- ── Article List ── -->
-  <section class="article-list fade-in">
+  <!-- ── Article Cards ── -->
+  <section class="card-grid fade-in">
     {posts.map(post => (
-      <article class="article-row">
-        <div class="article-meta">
-          {post.data.issue && <span class="article-issue">NO.{post.data.issue}</span>}
-          <time class="article-date">
-            {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </time>
-          {post.data.category && <span class="tag tag-threshold">{post.data.category}</span>}
-        </div>
-        <div class="article-body">
-          <h2 class="article-title">{post.data.title}</h2>
-          {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
-        </div>
-        <a href={`/blog/${post.slug}`} class="article-link">READ &rarr;</a>
+      <article class="card-item">
+        <a href={`/blog/${post.slug}`} class="card-link">
+          <div class="card-image cover-img">
+            {post.data.cover ? (
+              <img src={post.data.cover} alt={post.data.title} />
+            ) : (
+              <div class="placeholder-img threshold-img"></div>
+            )}
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              {post.data.issue && <span class="card-issue">NO.{post.data.issue}</span>}
+              <time class="card-date">
+                {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              {post.data.category && <span class="tag tag-threshold">{post.data.category}</span>}
+            </div>
+            <h2 class="card-title">{post.data.title}</h2>
+            {post.data.subtitle && <p class="card-subtitle">{post.data.subtitle}</p>}
+          </div>
+        </a>
       </article>
     ))}
   </section>
@@ -65,35 +73,63 @@ const posts = allPosts
   margin-top: 1rem;
 }
 
-/* ── Article List ── */
-.article-list {
-  padding: 0 2rem;
-}
-
-.article-row {
+/* ── Article Cards ── */
+.card-grid {
   display: grid;
-  grid-template-columns: 200px 1fr auto;
-  gap: 2rem;
-  align-items: start;
-  padding: 2.5rem 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
   border-bottom: 1px solid var(--border);
 }
+.card-item {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.card-item:nth-child(2n) { border-right: none; }
+.card-link {
+  display: block;
+  padding: 1.5rem;
+  transition: background 0.2s;
+}
+.card-link:hover { background: rgba(17,17,17,0.02); }
 
-.article-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.card-image {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .cover-img img { transform: scale(1.03); }
+.placeholder-img {
+  width: 100%;
+  height: 100%;
+}
+.threshold-img {
+  background: linear-gradient(135deg, #2a1f14 0%, #5c4a32 50%, #8a7355 100%);
 }
 
-.article-issue {
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.card-issue {
   font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--accent);
 }
-
-.article-date {
+.card-date {
   font-family: var(--font-ui);
   font-size: 11px;
   font-weight: 500;
@@ -101,39 +137,34 @@ const posts = allPosts
   color: var(--dust);
 }
 
-.article-body {
-  min-width: 0;
-}
-
-.article-title {
+.card-title {
   font-family: var(--font-body);
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(20px, 2.5vw, 26px);
   font-weight: 700;
   line-height: 1.3;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  position: relative;
+  display: inline-block;
 }
+.card-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-link:hover .card-title::after { width: 100%; }
 
-.article-subtitle {
+.card-subtitle {
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--dust);
 }
-
-.article-link {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 2px;
-  align-self: center;
-  transition: opacity 0.2s;
-}
-.article-link:hover { opacity: 0.7; }
 
 /* ── Empty ── */
 .empty {
@@ -149,21 +180,8 @@ const posts = allPosts
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .page-header { padding: 3rem 1.25rem 2rem; }
-  .article-list { padding: 0 1.25rem; }
-  .article-row {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    padding: 2rem 0;
-  }
-  .article-meta {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .article-title { font-size: 22px; }
-  .article-link {
-    align-self: start;
-  }
+  .card-grid { grid-template-columns: 1fr; }
+  .card-item { border-right: none; }
+  .card-title { font-size: 20px; }
 }
 </style>
