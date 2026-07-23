@@ -1,18 +1,25 @@
----
-// DevLog #001 — MindOS 开发日志
----
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>我做了个 AI 个人成长 Widget — 开发日志</title>
-<meta name="description" content="一篇开发日志，记录从 4 层架构到 8 个 tab、从单一 Claude API 到多 provider 兼容、从想法到上线的过程。">
+<title>我做了个 AI 个人成长 Widget，把脑子里乱七八糟的想法交给 AI 整理
+</title>
+<meta name="description" content="一篇开发日志，记录从 4 层架构到 8 个 tab、从单一 Claude API 到多 provider 兼容、从想法到上线的过程，还有中间踩过的坑。
+">
+<meta name="author" content="MindOS">
+<meta property="og:title" content="我做了个 AI 个人成长 Widget，把脑子里乱七八糟的想法交给 AI 整理
+">
+<meta property="og:description" content="一篇开发日志，记录从 4 层架构到 8 个 tab、从单一 Claude API 到多 provider 兼容、从想法到上线的过程，还有中间踩过的坑。
+">
+<meta property="og:type" content="article">
+
+<!-- ═══ 字体：EB Garamond (衬线/标题) + Crimson Pro (正文) + JetBrains Mono (等宽) ═══ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style is:global>
+
+<style>
 /* ═══════════════════════════════════════════════════════════
    EDITORIAL BRUTALISM — Design Tokens
    低饱和知识分子感 + 数字杂志档案感 + Ink Blue 学术蓝
@@ -661,6 +668,7 @@ ol.editorial-list li::before {
 </style>
 </head>
 <body>
+
 <div class="archive-frame">
 
   <!-- ═══ MASTHEAD ═══ -->
@@ -1176,14 +1184,12 @@ function renderReview(period = revPeriod, data) { ... }
 
   </article>
 
-  
   <!-- ═══ BACK NAV ═══ -->
   <div style="max-width: var(--measure-full); margin: 0 auto; padding: 0 var(--space-8);">
     <div style="max-width: var(--measure); margin: 0 auto; padding: var(--space-8) 0; border-top: 1px solid var(--rule-soft);">
       <a href="/blog" style="font-family: var(--font-mono); font-size: var(--fs-tiny); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none;">← 返回 Blog</a>
     </div>
   </div>
-
 
   <!-- ═══ COLOPHON ═══ -->
   <footer class="colophon">
@@ -1250,4 +1256,5 @@ function renderReview(period = revPeriod, data) { ... }
   toggleSidebar();
 })();
 </script>
+</body>
 </html>
