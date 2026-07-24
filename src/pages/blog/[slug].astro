@@ -63,6 +63,9 @@ const modLabel = moduleName[post.data.module] ?? 'ARCHIVE';
           {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
         </time>
         {post.data.readingTime && <span class="art-reading">{post.data.readingTime} min read</span>}
+        <span class="art-views" id="busuanzi_container_page_pv">
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
       </div>
     </header>
 
@@ -178,6 +181,19 @@ const modLabel = moduleName[post.data.module] ?? 'ARCHIVE';
   color: var(--dust);
   padding-left: 1rem;
   border-left: 1px solid var(--border);
+}
+.art-views {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dust);
+  padding-left: 1rem;
+  border-left: 1px solid var(--border);
+}
+.art-views #busuanzi_value_page_pv {
+  font-weight: 700;
 }
 
 /* ── Rule ── */
